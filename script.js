@@ -84,6 +84,29 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Music could not be played. Add a valid MP3 at assets/music.mp3.", error);
     }
   });
+
+  // Language buttons control the Google Translate widget without showing its default toolbar.
+  const languageButtons = document.querySelectorAll(".language-button");
+  const changeLanguage = (language, attempts = 0) => {
+    const selector = document.querySelector(".goog-te-combo");
+    if (!selector) {
+      if (attempts < 20) window.setTimeout(() => changeLanguage(language, attempts + 1), 250);
+      return;
+    }
+    selector.value = language;
+    selector.dispatchEvent(new Event("change"));
+  };
+
+  languageButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      languageButtons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("is-active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+      changeLanguage(button.dataset.language);
+    });
+  });
   // ------------------------------------------------------------------
   // Keep a JS-driven --vh in sync with the real, current viewport height.
   // This is the fix for the "scene jumps / isn't visible / doesn't come

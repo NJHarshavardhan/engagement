@@ -59,6 +59,13 @@ a { color: inherit; }
 .music-control:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(30,60,36,.18); }
 .music-icon { font-size: 18px; line-height: 1; }
 .music-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.language-switcher { position: fixed; z-index: 20; left: 22px; top: 22px; display: flex; align-items: center; padding: 4px; gap: 2px; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; background: rgba(255,255,255,.78); backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(30,60,36,.1); }
+.language-button { border: 0; border-radius: 999px; padding: 7px 10px; background: transparent; color: var(--green-deep); font-family: "Poppins", sans-serif; font-size: 9px; cursor: pointer; transition: .25s ease; }
+.language-button.is-active { background: var(--green-dark); color: white; box-shadow: 0 4px 10px rgba(40,69,47,.18); }
+.language-button:not(.is-active):hover { background: rgba(161,217,155,.22); }
+#google_translate_element { position: fixed; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.goog-te-banner-frame, .skiptranslate iframe { display: none !important; }
+body { top: 0 !important; }
 
 .hero {
   min-height: 100svh;
@@ -623,6 +630,8 @@ footer a {
 @media (max-width: 560px) {
   .music-control { top: 14px; right: 14px; padding: 9px 12px; }
   .music-label { display: none; }
+  .language-switcher { left: 14px; top: 14px; }
+  .language-button { padding: 7px 9px; font-size: 8px; }
   .hero-content { padding: 85px 22px 65px; }
   .names h1 { font-size: clamp(55px, 17vw, 78px); }
   .hero-copy br { display: none; }
@@ -831,6 +840,28 @@ footer a {
 .kolam { position: absolute; left: 50%; bottom: 2.5%; transform: translateX(-50%); color: rgba(111,156,113,.28); font-size: 16px; letter-spacing: 12px; white-space: nowrap; }
 .welcome-sign { position: absolute; top: 30%; left: 50%; transform: translateX(-50%); padding: 5px 12px; border: 1px solid rgba(61,101,68,.12); border-radius: 999px; background: rgba(255,255,255,.34); color: rgba(61,101,68,.5); font-size: 7px; letter-spacing: .22em; white-space: nowrap; opacity: calc(.35 + var(--scene-celebrate) * .4); }
 .name-board { position: absolute; top: 34%; left: 50%; transform: translate(-50%, 0); padding: 4px 14px; border: 1px solid rgba(61,101,68,.1); border-radius: 6px; background: rgba(255,255,255,.4); color: rgba(61,101,68,.4); font-family: "Great Vibes", cursive; font-size: 14px; white-space: nowrap; opacity: calc(.3 + var(--scene-intro) * .35); }
+.function-arch-trim { position: absolute; z-index: 2; left: 50%; top: 15%; width: min(67vw, 735px); height: min(70vw, 760px); transform: translateX(-50%); border: 2px solid rgba(226,168,92,.24); border-bottom: 0; border-radius: 50% 50% 0 0; pointer-events: none; }
+.function-arch-trim span { position: absolute; top: -13px; color: #e2a85c; font-size: 17px; transform: translateX(-50%); animation: archFlowerFloat 3.8s ease-in-out infinite; }
+.function-arch-trim span:nth-child(1) { left: 3%; } .function-arch-trim span:nth-child(2) { left: 19%; animation-delay: -.6s; }
+.function-arch-trim span:nth-child(3) { left: 34%; animation-delay: -1.1s; } .function-arch-trim span:nth-child(4) { left: 50%; animation-delay: -1.7s; }
+.function-arch-trim span:nth-child(5) { left: 66%; animation-delay: -2.2s; } .function-arch-trim span:nth-child(6) { left: 81%; animation-delay: -2.8s; }
+.function-arch-trim span:nth-child(7) { left: 97%; animation-delay: -3.3s; }
+.hanging-tassels { position: absolute; z-index: 2; top: 18%; width: 68px; height: 170px; opacity: .65; }
+.tassel-left { left: 12%; } .tassel-right { right: 12%; transform: scaleX(-1); }
+.hanging-tassels::before { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 132px; background: rgba(61,101,68,.3); }
+.hanging-tassels i { position: absolute; bottom: 0; width: 13px; height: 38px; border-radius: 2px 2px 60% 60%; background: linear-gradient(180deg, #f0b8bd, #d58b98); transform-origin: top center; animation: tasselSway 3.4s ease-in-out infinite; }
+.hanging-tassels i:nth-child(1) { left: 8px; bottom: 22px; } .hanging-tassels i:nth-child(2) { left: 27px; bottom: 0; background: linear-gradient(180deg, #f3d98a, #d39f4e); animation-delay: -.8s; } .hanging-tassels i:nth-child(3) { left: 46px; bottom: 20px; animation-delay: -1.5s; }
+.brass-urn { position: absolute; z-index: 2; bottom: 8%; width: 37px; height: 42px; border-radius: 45% 45% 30% 30%; background: linear-gradient(90deg, #8f6c2f, #e2b65a 45%, #87652a); opacity: .55; box-shadow: 0 7px 12px rgba(61,45,18,.18); }
+.urn-left { left: 24%; } .urn-right { right: 24%; }
+.brass-urn::before { content: ""; position: absolute; left: 50%; top: -8px; width: 18px; height: 10px; transform: translateX(-50%); border-radius: 50%; border: 2px solid #b8893d; }
+.brass-urn span { position: absolute; left: 50%; top: -26px; width: 8px; height: 18px; transform: translateX(-50%); border-radius: 50% 50% 45% 45%; background: #f3ce6f; box-shadow: 0 0 16px #f3ce6f; animation: urnFlame 1.5s ease-in-out infinite; }
+.stage-wash { position: absolute; z-index: 0; left: 50%; bottom: 0; width: min(780px, 100vw); height: 27%; transform: translateX(-50%); background: radial-gradient(ellipse at center bottom, rgba(226,168,92,.14), transparent 68%); animation: stageGlow 4s ease-in-out infinite; }
+.flying-butterflies { position: absolute; inset: 0; z-index: 7; overflow: hidden; pointer-events: none; }
+.butterfly { position: absolute; left: -8%; top: 70%; display: block; font-size: 21px; filter: drop-shadow(0 5px 6px rgba(42,75,48,.16)); animation: butterflyFlight 13s linear infinite; }
+.butterfly-one { animation-delay: -1s; --flight-y: -45vh; --flight-x: 116vw; }
+.butterfly-two { top: 82%; font-size: 16px; animation-delay: -5s; --flight-y: -25vh; --flight-x: 122vw; animation-duration: 16s; }
+.butterfly-three { top: 58%; font-size: 18px; animation-delay: -8s; --flight-y: 22vh; --flight-x: 118vw; animation-duration: 15s; }
+.butterfly-four { top: 76%; font-size: 14px; animation-delay: -11s; --flight-y: -62vh; --flight-x: 126vw; animation-duration: 18s; }
 
 /* ---------- Toran / thoranam hanging directly over the arch ---------- */
 .thoranam { position: absolute; z-index: 5; left: 50%; top: 1px; width: min(1120px, 108vw); height: 185px; transform: translateX(-50%) translate3d(calc(var(--pointer-x) * 5px), calc(var(--pointer-y) * 2px), 0); pointer-events: none; }
@@ -968,6 +999,11 @@ footer a {
 @keyframes flipDigit { 0% { transform: rotateX(0deg); } 42% { transform: rotateX(-88deg); } 58% { transform: rotateX(88deg); } 100% { transform: rotateX(0deg); } }
 @keyframes digitShine { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
 @keyframes meetingPulse { 0%, 100% { box-shadow: 0 0 0 2px rgba(61,101,68,.22), 0 0 0 rgba(226,168,92,0); } 50% { box-shadow: 0 0 0 2px rgba(61,101,68,.22), 0 0 0 7px rgba(226,168,92,.18); } }
+@keyframes archFlowerFloat { 0%, 100% { transform: translateX(-50%) translateY(0) rotate(-8deg); } 50% { transform: translateX(-50%) translateY(-5px) rotate(8deg); } }
+@keyframes tasselSway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(7deg); } }
+@keyframes urnFlame { 0%, 100% { opacity: .55; transform: translateX(-50%) scale(.82) rotate(-3deg); } 50% { opacity: 1; transform: translateX(-50%) scale(1.18) rotate(3deg); } }
+@keyframes stageGlow { 0%, 100% { opacity: .65; transform: translateX(-50%) scaleX(.92); } 50% { opacity: 1; transform: translateX(-50%) scaleX(1.05); } }
+@keyframes butterflyFlight { 0% { transform: translate3d(0, 0, 0) rotate(-12deg) scale(.75); opacity: 0; } 8% { opacity: .82; } 28% { transform: translate3d(calc(var(--flight-x) * .25), calc(var(--flight-y) * .35), 0) rotate(16deg) scale(1); } 52% { transform: translate3d(calc(var(--flight-x) * .52), calc(var(--flight-y) * -.18), 0) rotate(-16deg) scale(.9); } 76% { transform: translate3d(calc(var(--flight-x) * .78), calc(var(--flight-y) * .55), 0) rotate(14deg) scale(1.05); } 100% { transform: translate3d(var(--flight-x), var(--flight-y), 0) rotate(-10deg) scale(.7); opacity: 0; } }
 
 /* ---------------- Responsive tuning (single tidy set of breakpoints) ---------------- */
 @media (max-width: 1024px) {
@@ -993,6 +1029,7 @@ footer a {
   .garland { transform: scale(.75); top: 19%; } .garland-right { transform: scaleX(-1) scale(.75); }
   .flower-string { width: 42vw; } .fabric-drape { width: 90px; }
   .entrance-pillars { display: none; } .decor-pot { display: none; }
+  .butterfly { font-size: 15px; }
   .kolam { font-size: 12px; letter-spacing: 8px; }
   .welcome-sign { top: 34%; font-size: 6px; }
   .name-board { top: 38%; font-size: 12px; }
@@ -1005,13 +1042,13 @@ footer a {
   .scene-sticky { min-height: 520px; }
   .thoranam { width: 145vw; top: -5px; transform: translateX(-50%) scale(.82); }
   .thoranam-cluster:nth-of-type(even) { display: block; }
-  .scene-copy { top: 15%; width: 90vw; }
-  .scene-copy h2 { font-size: 34px; }
-  .scene-copy p:last-child { font-size: 18px; }
+  .scene-copy { top: 12%; width: 88vw; }
+  .scene-copy h2 { font-size: 30px; }
+  .scene-copy p:last-child { margin-top: 8px; font-size: 16px; }
   .scene-badge { top: 25%; font-size: 7px; }
-  .person { bottom: clamp(9%, 10%, 12%); }
-  .person-girl { width: clamp(108px, 31vw, 132px); --girl-travel: 28vw; }
-  .person-boy { width: clamp(108px, 31vw, 132px); --boy-travel: 28vw; }
+  .person { bottom: 34%; }
+  .person-girl { width: clamp(140px, 42vw, 165px); --girl-travel: 5vw; }
+  .person-boy { width: clamp(140px, 42vw, 165px); --boy-travel: 5vw; }
   .scene-ring-glow { bottom: 27%; width: 58px; height: 58px; }
   .scene-ring-button { bottom: 23%; width: 58px; height: 58px; }
   .scene-ring-button::after { font-size: 7px; }
@@ -1036,6 +1073,7 @@ footer a {
   .scene-badge-dot, .scene-petals i, .scene-ring-button span,
   .scene-corner-flowers span, .garland, .fairy-lights i, .traditional-lamp span,
   .diya::after, .hanging-lantern::after, .balloon, .magic-spark, .love-heart,
-  .venue-qr-frame::after, .time-box strong, .time-box strong.flip-digit, .marker-meet, .countdown-rail > span { animation: none; }
+  .venue-qr-frame::after, .time-box strong, .time-box strong.flip-digit, .marker-meet, .countdown-rail > span,
+  .function-arch-trim span, .hanging-tassels i, .brass-urn span, .stage-wash, .butterfly { animation: none; }
   .scene-backdrop, .thoranam, .scene-arch { transform: none; transition: none; }
 }
