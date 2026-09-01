@@ -19,23 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotionEarly = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   // ------------------------------------------------------------------
-  // Signature intro overlay. CSS alone guarantees it dissolves even if
-  // JS never runs; here we just let an early scroll/click/keypress skip
-  // it sooner so eager visitors aren't held up.
-  // ------------------------------------------------------------------
-  const introOverlay = document.getElementById("introOverlay");
-  if (introOverlay) {
-    const dismissIntro = () => introOverlay.classList.add("is-hidden");
-    if (prefersReducedMotionEarly.matches) {
-      dismissIntro();
-    } else {
-      ["wheel", "touchstart", "keydown", "click"].forEach((type) => {
-        window.addEventListener(type, dismissIntro, { once: true, passive: true });
-      });
-    }
-  }
-
-  // ------------------------------------------------------------------
   // Word-by-word reveal: split marked copy into masked word spans, then
   // fade/slide each one in with a small stagger once visible.
   // ------------------------------------------------------------------
