@@ -224,6 +224,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
     const smoothstep = (value) => value * value * (3 - 2 * value);
+    const easeInOutCubic = (value) => {
+      if (value < 0.5) return 4 * value * value * value;
+      return 1 - Math.pow(-2 * value + 2, 3) / 2;
+    };
 
     const updateEngagementScene = () => {
       const rect = engagementScene.getBoundingClientRect();
@@ -231,16 +235,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const progress = clamp(-rect.top / travel);
 
       const intro = smoothstep(clamp(progress / 0.08));
-      const meet = smoothstep(clamp((progress - 0.08) / 0.47));
-      const celebrate = smoothstep(clamp((progress - 0.55) / 0.23));
+      const meetRaw = clamp((progress - 0.08) / 0.9);
+      const meet = easeInOutCubic(meetRaw);
+      const celebrate = smoothstep(clamp((progress - 0.74) / 0.18));
 
       sceneSticky.style.setProperty("--scene-progress", progress.toFixed(4));
       sceneSticky.style.setProperty("--scene-intro", intro.toFixed(4));
       sceneSticky.style.setProperty("--scene-meet", meet.toFixed(4));
       sceneSticky.style.setProperty("--scene-celebrate", celebrate.toFixed(4));
 
-      sceneSticky.classList.toggle("is-together", meet > 0.985);
-      sceneSticky.classList.toggle("is-celebrating", celebrate > 0.65);
+      sceneSticky.classList.toggle("is-together", meet > 0.98);
+      sceneSticky.classList.toggle("is-celebrating", celebrate > 0.58);
 
       // Add a tiny scroll-direction cue to the thoranam and backdrop without
       // moving layout, keeping the animation smooth on phones and iPads.
