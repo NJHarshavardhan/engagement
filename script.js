@@ -235,9 +235,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const progress = clamp(-rect.top / travel);
 
       const intro = smoothstep(clamp(progress / 0.08));
-      const meetRaw = clamp((progress - 0.08) / 0.9);
-      const meet = easeInOutCubic(meetRaw);
-      const celebrate = smoothstep(clamp((progress - 0.74) / 0.18));
+      const meetRaw = clamp((progress - 0.08) / 1.42);
+      const holdStart = 0.76;
+      const holdEnd = 0.9;
+      const meet = meetRaw < holdStart
+        ? Math.pow(smoothstep(meetRaw / holdStart), 1.7)
+        : meetRaw < holdEnd
+          ? 0.82 + (meetRaw - holdStart) / (holdEnd - holdStart) * 0.14
+          : 0.96 + Math.pow(smoothstep((meetRaw - holdEnd) / (1 - holdEnd)), 1.9) * 0.04;
+      const celebrate = smoothstep(clamp((progress - 0.9) / 0.1));
 
       sceneSticky.style.setProperty("--scene-progress", progress.toFixed(4));
       sceneSticky.style.setProperty("--scene-intro", intro.toFixed(4));
@@ -245,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sceneSticky.style.setProperty("--scene-celebrate", celebrate.toFixed(4));
 
       sceneSticky.classList.toggle("is-together", meet > 0.98);
-      sceneSticky.classList.toggle("is-celebrating", celebrate > 0.58);
+      sceneSticky.classList.toggle("is-celebrating", celebrate > 0.55);
 
       // Add a tiny scroll-direction cue to the thoranam and backdrop without
       // moving layout, keeping the animation smooth on phones and iPads.
