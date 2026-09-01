@@ -16,6 +16,123 @@ document.addEventListener("DOMContentLoaded", () => {
     revealObserver.observe(item);
   });
 
+  const prefersReducedMotionEarly = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // ------------------------------------------------------------------
+  // Signature intro overlay. CSS alone guarantees it dissolves even if
+  // JS never runs; here we just let an early scroll/click/keypress skip
+  // it sooner so eager visitors aren't held up.
+  // ------------------------------------------------------------------
+  const introOverlay = document.getElementById("introOverlay");
+  if (introOverlay) {
+    const dismissIntro = () => introOverlay.classList.add("is-hidden");
+    if (prefersReducedMotionEarly.matches) {
+      dismissIntro();
+    } else {
+      ["wheel", "touchstart", "keydown", "click"].forEach((type) => {
+        window.addEventListener(type, dismissIntro, { once: true, passive: true });
+      });
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // Word-by-word reveal: split marked copy into masked word spans, then
+  // fade/slide each one in with a small stagger once visible.
+  // ------------------------------------------------------------------
+  const splitWords = (el) => {
+    const parts = el.innerHTML.split(/(<br\s*\/?>)/i);
+    el.innerHTML = parts
+      .map((part) => {
+        if (/^<br\s*\/?>$/i.test(part)) return part;
+        return part
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((word) => `<span class="word"><span class="word-inner">${word}</span></span>`)
+          .join(" ");
+      })
+      .join(" ");
+  };
+
+  document.querySelectorAll(".split-words").forEach((el) => {
+    splitWords(el);
+    el.querySelectorAll(".word-inner").forEach((word, index) => {
+      word.style.transitionDelay = `${index * 45}ms`;
+    });
+  });
+
+  const wordRevealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll(".split-words").forEach((el) => wordRevealObserver.observe(el));
+
+  // ------------------------------------------------------------------
+  // Custom cursor: a dot that tracks exactly, and a ring that trails
+  // slightly and swells over anything interactive.
+  // ------------------------------------------------------------------
+  const canHoverFineEarly = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const customCursor = document.getElementById("customCursor");
+  if (customCursor && canHoverFineEarly.matches && !prefersReducedMotionEarly.matches) {
+    document.body.classList.add("has-custom-cursor");
+    const cursorDot = customCursor.querySelector(".cursor-dot");
+    const cursorRing = customCursor.querySelector(".cursor-ring");
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener("pointermove", (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    }, { passive: true });
+
+    const animateRing = () => {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      requestAnimationFrame(animateRing);
+    };
+    requestAnimationFrame(animateRing);
+
+    const hoverTargets = "a, button, [data-tilt], .magnetic-btn, .language-button";
+    document.addEventListener("mouseover", (event) => {
+      if (event.target.closest(hoverTargets)) cursorRing.classList.add("is-hovering");
+    });
+    document.addEventListener("mouseout", (event) => {
+      if (event.target.closest(hoverTargets)) cursorRing.classList.remove("is-hovering");
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Ambient petals: a sparse, slow drift of blossoms over the whole
+  // page for a little continuous life between the bigger set pieces.
+  // ------------------------------------------------------------------
+  const ambientPetals = document.getElementById("ambientPetals");
+  if (ambientPetals && !prefersReducedMotionEarly.matches) {
+    const glyphs = ["✦", "✧", "❧", "✿"];
+    const colors = ["rgba(226,168,92,.5)", "rgba(136,180,125,.45)", "rgba(161,217,155,.5)"];
+    const fragment = document.createDocumentFragment();
+    const petalCount = 14;
+    for (let i = 0; i < petalCount; i++) {
+      const petal = document.createElement("span");
+      petal.textContent = glyphs[i % glyphs.length];
+      petal.style.setProperty("--pl", `${(Math.random() * 96 + 2).toFixed(1)}%`);
+      petal.style.setProperty("--ps", `${(Math.random() * 10 + 10).toFixed(0)}px`);
+      petal.style.setProperty("--pd", `${(Math.random() * 10 + 14).toFixed(1)}s`);
+      petal.style.setProperty("--pdelay", `${(Math.random() * -20).toFixed(1)}s`);
+      petal.style.setProperty("--pdrift", `${(Math.random() * 80 - 40).toFixed(0)}px`);
+      petal.style.color = colors[i % colors.length];
+      fragment.appendChild(petal);
+    }
+    ambientPetals.appendChild(fragment);
+  }
+
   // Countdown: 01 November 2026, 6:00 PM local time
   const targetDate = new Date(2026, 10, 1, 18, 0, 0);
 
@@ -61,29 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateCountdown();
   setInterval(updateCountdown, 1000);
-
-  // Optional background music. It only starts after the visitor presses the control.
-  const music = document.getElementById("bgMusic");
-  const musicToggle = document.getElementById("musicToggle");
-  const musicLabel = musicToggle.querySelector(".music-label");
-
-  musicToggle.addEventListener("click", async () => {
-    try {
-      if (music.paused) {
-        await music.play();
-        musicToggle.setAttribute("aria-pressed", "true");
-        musicToggle.setAttribute("aria-label", "Pause background music");
-        musicLabel.textContent = "Pause";
-      } else {
-        music.pause();
-        musicToggle.setAttribute("aria-pressed", "false");
-        musicToggle.setAttribute("aria-label", "Play background music");
-        musicLabel.textContent = "Music";
-      }
-    } catch (error) {
-      console.warn("Music could not be played. Add a valid MP3 at assets/music.mp3.", error);
-    }
-  });
 
   // Language buttons control the Google Translate widget without showing its default toolbar.
   const languageButtons = document.querySelectorAll(".language-button");
@@ -252,5 +346,156 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 950);
     });
   }
+
+  // ------------------------------------------------------------------
+  // Scroll progress rail across the top of the page.
+  // ------------------------------------------------------------------
+  const scrollProgressBar = document.getElementById("scrollProgressBar");
+  const updateScrollProgress = () => {
+    if (!scrollProgressBar) return;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+    scrollProgressBar.style.width = `${pct}%`;
+  };
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const canHoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const fineInteractionsEnabled = canHoverFine.matches && !prefersReducedMotion.matches;
+
+  // ------------------------------------------------------------------
+  // A soft light that drifts toward the cursor, giving the page a
+  // little extra depth on desktop. Skipped on touch devices and when
+  // the visitor prefers reduced motion.
+  // ------------------------------------------------------------------
+  const cursorGlow = document.getElementById("cursorGlow");
+  if (cursorGlow && fineInteractionsEnabled) {
+    let glowX = window.innerWidth / 2;
+    let glowY = window.innerHeight / 2;
+    let targetX = glowX;
+    let targetY = glowY;
+
+    window.addEventListener("pointermove", (event) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
+      cursorGlow.classList.add("is-active");
+    }, { passive: true });
+
+    document.addEventListener("mouseleave", () => cursorGlow.classList.remove("is-active"));
+
+    const animateGlow = () => {
+      glowX += (targetX - glowX) * 0.14;
+      glowY += (targetY - glowY) * 0.14;
+      cursorGlow.style.transform = `translate3d(${glowX}px, ${glowY}px, 0)`;
+      requestAnimationFrame(animateGlow);
+    };
+    requestAnimationFrame(animateGlow);
+  }
+
+  // ------------------------------------------------------------------
+  // 3D pointer-tilt for the marked cards, and a gentle magnetic pull
+  // on the primary buttons. Both reset smoothly on pointer leave.
+  // ------------------------------------------------------------------
+  if (fineInteractionsEnabled) {
+    document.querySelectorAll("[data-tilt]").forEach((card) => {
+      const strength = 8;
+      const handleTiltMove = (event) => {
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - 0.5;
+        const py = (event.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform =
+          `perspective(1100px) rotateX(${(-py * strength).toFixed(2)}deg) rotateY(${(px * strength).toFixed(2)}deg) translateY(-6px) translateZ(14px)`;
+      };
+      const resetTilt = () => { card.style.transform = ""; };
+      card.addEventListener("pointermove", handleTiltMove);
+      card.addEventListener("pointerleave", resetTilt);
+    });
+
+    document.querySelectorAll(".magnetic-btn").forEach((btn) => {
+      const pull = 12;
+      const handleMagnetMove = (event) => {
+        const rect = btn.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - 0.5;
+        const py = (event.clientY - rect.top) / rect.height - 0.5;
+        btn.style.transform = `translate(${(px * pull).toFixed(1)}px, ${(py * pull - 3).toFixed(1)}px)`;
+      };
+      const resetMagnet = () => { btn.style.transform = ""; };
+      btn.addEventListener("pointermove", handleMagnetMove);
+      btn.addEventListener("pointerleave", resetMagnet);
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Gentle scroll-tied parallax for the hero rings and botanical art.
+  // ------------------------------------------------------------------
+  const parallaxEls = Array.from(document.querySelectorAll("[data-speed]"));
+  const updateParallax = () => {
+    if (!parallaxEls.length) return;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    parallaxEls.forEach((el) => {
+      const speed = parseFloat(el.dataset.speed) || 0;
+      el.style.setProperty("--parallax-y", `${(scrollTop * speed).toFixed(1)}px`);
+    });
+  };
+
+  // ------------------------------------------------------------------
+  // Twinkling starfield behind the dark countdown section.
+  // ------------------------------------------------------------------
+  const starsContainer = document.getElementById("countdownStars");
+  if (starsContainer && !prefersReducedMotion.matches) {
+    const starCount = 48;
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement("i");
+      const size = (Math.random() * 2.2 + 1).toFixed(1);
+      star.style.left = `${(Math.random() * 100).toFixed(1)}%`;
+      star.style.top = `${(Math.random() * 100).toFixed(1)}%`;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.setProperty("--star-duration", `${(Math.random() * 2.5 + 2).toFixed(1)}s`);
+      star.style.setProperty("--star-delay", `${(Math.random() * 3).toFixed(1)}s`);
+      star.style.setProperty("--star-opacity", (Math.random() * 0.5 + 0.4).toFixed(2));
+      fragment.appendChild(star);
+    }
+    starsContainer.appendChild(fragment);
+  }
+
+  // ------------------------------------------------------------------
+  // Continuous zoom in/out on scroll for headings and key copy: grows
+  // as an element nears the vertical centre of the viewport, eases back
+  // down as it approaches the top or bottom edge.
+  // ------------------------------------------------------------------
+  const zoomEls = Array.from(document.querySelectorAll(".zoom-scroll"));
+  const updateZoomScroll = () => {
+    if (!zoomEls.length || prefersReducedMotion.matches) return;
+    const vh = window.innerHeight;
+    zoomEls.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      const elCenter = rect.top + rect.height / 2;
+      const normalized = Math.min(1, Math.max(-1, (elCenter - vh / 2) / (vh / 2)));
+      const scale = 1.14 - Math.abs(normalized) * 0.32;
+      el.style.transform = `scale(${scale.toFixed(3)})`;
+    });
+  };
+
+  // Drive the progress rail and parallax off a single rAF-throttled
+  // scroll listener so they never fight the engagement-scene loop above.
+  let pageScrollTicking = false;
+  const onPageScroll = () => {
+    if (!pageScrollTicking) {
+      pageScrollTicking = true;
+      requestAnimationFrame(() => {
+        updateScrollProgress();
+        updateParallax();
+        updateZoomScroll();
+        pageScrollTicking = false;
+      });
+    }
+  };
+  updateScrollProgress();
+  updateParallax();
+  updateZoomScroll();
+  window.addEventListener("scroll", onPageScroll, { passive: true });
+  window.addEventListener("resize", onPageScroll, { passive: true });
 
 });

@@ -17,26 +17,34 @@
 
 <body>
   <div class="page-shell">
-    <button class="music-control" id="musicToggle" type="button" aria-label="Play background music"
-      aria-pressed="false">
-      <span class="music-icon">♫</span>
-      <span class="music-label">Music</span>
-    </button>
+    <div class="intro-overlay" id="introOverlay" aria-hidden="true">
+      <div class="intro-monogram">
+        <span class="intro-letter">H</span>
+        <span class="intro-amp">&amp;</span>
+        <span class="intro-letter">K</span>
+      </div>
+      <div class="intro-line"></div>
+      <p class="intro-caption">Harsha Vardhan &amp; Kowshika</p>
+    </div>
+    <div class="ambient-petals" id="ambientPetals" aria-hidden="true"></div>
+    <div class="custom-cursor" id="customCursor" aria-hidden="true">
+      <span class="cursor-dot"></span>
+      <span class="cursor-ring"></span>
+    </div>
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollProgressBar"></span></div>
+    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
     <div class="language-switcher" role="group" aria-label="Choose language">
       <button class="language-button is-active" type="button" data-language="en" aria-pressed="true">English</button>
       <button class="language-button" type="button" data-language="ta" aria-pressed="false">தமிழ்</button>
     </div>
     <div id="google_translate_element" aria-hidden="true"></div>
-    <audio id="bgMusic" loop preload="none">
-      <source src="assets/music.mp3" type="audio/mpeg">
-    </audio>
 
     <main>
       <section class="hero" id="top">
         <div class="section-decoration hero-decoration" aria-hidden="true"><span class="decor-leaf decor-leaf-left">❧</span><span class="decor-leaf decor-leaf-right">❧</span><span class="decor-flower decor-flower-one">✿</span><span class="decor-flower decor-flower-two">✿</span></div>
-        <div class="hero-orbit hero-orbit-one"></div>
-        <div class="hero-orbit hero-orbit-two"></div>
-        <svg class="botanical botanical-left" viewBox="0 0 220 420" aria-hidden="true">
+        <div class="hero-orbit hero-orbit-one" data-speed="0.12"></div>
+        <div class="hero-orbit hero-orbit-two" data-speed="-0.08"></div>
+        <svg class="botanical botanical-left" data-speed="0.06" viewBox="0 0 220 420" aria-hidden="true">
           <path d="M145 405 C135 290, 95 170, 22 45" />
           <path d="M102 287 C72 270, 40 244, 26 214" />
           <path d="M91 245 C118 229, 143 204, 151 174" />
@@ -47,7 +55,7 @@
           <ellipse cx="18" cy="126" rx="10" ry="24" transform="rotate(-48 18 126)" />
           <ellipse cx="87" cy="81" rx="10" ry="25" transform="rotate(38 87 81)" />
         </svg>
-        <svg class="botanical botanical-right" viewBox="0 0 220 420" aria-hidden="true">
+        <svg class="botanical botanical-right" data-speed="-0.06" viewBox="0 0 220 420" aria-hidden="true">
           <path d="M72 405 C82 290, 122 170, 195 45" />
           <path d="M118 287 C148 270, 180 244, 194 214" />
           <path d="M129 245 C102 229, 77 204, 69 174" />
@@ -60,21 +68,21 @@
         </svg>
 
         <div class="hero-content reveal">
-          <p class="eyebrow">Together with their families</p>
-          <div class="names">
+          <p class="eyebrow split-words">Together with their families</p>
+          <div class="names zoom-scroll">
             <h1>Harsha Vardhan</h1>
             <span class="ampersand">&amp;</span>
             <h1>Kowshika</h1>
           </div>
           <div class="ornament"><span></span><i>✦</i><span></span></div>
-          <p class="hero-copy">Request the pleasure of your presence at their<br>Engagement Ceremony</p>
+          <p class="hero-copy split-words">Request the pleasure of your presence at their<br>Engagement Ceremony</p>
           <div class="hero-date">
             <strong>SUNDAY, 01 NOVEMBER 2026</strong>
             <span>6:00 PM</span>
           </div>
           <div class="hero-actions">
-            <a class="scroll-button" href="#couple">View Invitation <span>↓</span></a>
-            <a class="calendar-button" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Harsha+%26+Kowshika+Engagement&amp;dates=20261101T180000%2F20261101T200000&amp;ctz=Asia%2FKolkata&amp;location=Muthu+Thangam+Mahal%2C+Kamarajar+Salai%2C+Madurai&amp;details=Harsha+%26+Kowshika%27s+engagement+function+is+on+1+November+2026.%0A%0AReminder%3A+31+October+2026+at+9%3A00+AM+%281+day+before+the+function%29.&amp;reminders=popup%3A1440" target="_blank" rel="noopener noreferrer">Save the Date <span>+</span></a>
+            <a class="scroll-button magnetic-btn" href="#couple">View Invitation <span>↓</span></a>
+            <a class="calendar-button magnetic-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Harsha+%26+Kowshika+Engagement&amp;dates=20261101T180000%2F20261101T200000&amp;ctz=Asia%2FKolkata&amp;location=Muthu+Thangam+Mahal%2C+Kamarajar+Salai%2C+Madurai&amp;details=Harsha+%26+Kowshika%27s+engagement+function+is+on+1+November+2026.%0A%0AReminder%3A+31+October+2026+at+9%3A00+AM+%281+day+before+the+function%29.&amp;reminders=popup%3A1440" target="_blank" rel="noopener noreferrer">Save the Date <span>+</span></a>
           </div>
         </div>
         <div class="hero-bottom-curve"></div>
@@ -205,10 +213,10 @@
       <section class="couple section" id="couple">
         <div class="section-decoration couple-decoration" aria-hidden="true"><span class="decor-garland decor-garland-left">❧ ✿ ❧</span><span class="decor-garland decor-garland-right">❧ ✿ ❧</span><span class="decor-diya diya-one"></span><span class="decor-diya diya-two"></span></div>
         <div class="section-inner reveal">
-          <p class="section-kicker">A promise of forever</p>
-          <h2>Harsha Vardhan <span>&amp;</span> Kowshika</h2>
+          <p class="section-kicker split-words">A promise of forever</p>
+          <h2 class="zoom-scroll">Harsha Vardhan <span>&amp;</span> Kowshika</h2>
           <div class="mini-ornament">❧</div>
-          <p class="romantic-message">Two hearts, two souls, and one beautiful journey beginning together.</p>
+          <p class="romantic-message zoom-scroll">Two hearts, two souls, and one beautiful journey beginning together.</p>
         </div>
       </section>
 
@@ -216,22 +224,22 @@
         <div class="section-decoration details-decoration" aria-hidden="true"><span class="decor-flower decor-flower-one">✿</span><span class="decor-flower decor-flower-two">✿</span><span class="decor-leaf decor-leaf-left">❧</span><span class="decor-leaf decor-leaf-right">❧</span></div>
         <div class="section-inner">
           <div class="section-heading reveal">
-            <p class="section-kicker">Mark your calendar</p>
-            <h2>The Celebration</h2>
+            <p class="section-kicker split-words">Mark your calendar</p>
+            <h2 class="zoom-scroll">The Celebration</h2>
           </div>
           <div class="detail-grid">
-            <article class="detail-card reveal">
+            <article class="detail-card reveal" data-tilt>
               <div class="card-icon">♡</div>
               <p class="card-label">Date</p>
               <h3>Sunday, 01<br>November 2026</h3>
             </article>
-            <article class="detail-card reveal">
+            <article class="detail-card reveal" data-tilt>
               <div class="card-icon">◷</div>
               <p class="card-label">Time</p>
               <h3>6:00 PM</h3>
               <p>Evening</p>
             </article>
-            <article class="detail-card reveal">
+            <article class="detail-card reveal" data-tilt>
               <div class="card-icon">⌖</div>
               <p class="card-label">Venue</p>
               <h3>Muthu Thangam Mahal</h3>
@@ -243,17 +251,17 @@
 
       <section class="venue section" id="venue">
         <div class="section-decoration venue-decoration" aria-hidden="true"><span class="decor-string venue-string-left"></span><span class="decor-string venue-string-right"></span><span class="decor-pot-mark pot-mark-left">♨</span><span class="decor-pot-mark pot-mark-right">♨</span></div>
-        <div class="venue-card reveal">
+        <div class="venue-card reveal" data-tilt>
           <div class="venue-pattern"></div>
           <div class="venue-content">
-            <p class="section-kicker">Where we gather</p>
-            <h2>Muthu Thangam Mahal</h2>
+            <p class="section-kicker split-words">Where we gather</p>
+            <h2 class="zoom-scroll">Muthu Thangam Mahal</h2>
             <p class="venue-address">Kamarajar Salai, Madurai</p>
             <div class="venue-location-layout">
               <div class="venue-map-copy">
                 <span class="venue-pin" aria-hidden="true">⌖</span>
                 <p>Scan the code to open the mahal location in Google Maps.</p>
-                <a class="primary-button"
+                <a class="primary-button magnetic-btn"
                   href="https://maps.app.goo.gl/WMT5v2G72fxri1JF7"
                   target="_blank" rel="noopener noreferrer">Open in Maps <span>↗</span></a>
               </div>
@@ -267,9 +275,10 @@
 
       <section class="countdown section" id="countdown">
         <div class="section-decoration countdown-decoration" aria-hidden="true"><span class="decor-lamp lamp-mark-left">✦</span><span class="decor-lamp lamp-mark-right">✦</span><span class="countdown-pattern"></span></div>
+        <div class="countdown-stars" id="countdownStars" aria-hidden="true"></div>
         <div class="section-inner reveal">
-          <p class="section-kicker">Counting the moments</p>
-          <h2>Until We Say, “Let the Celebration Begin!”</h2>
+          <p class="section-kicker split-words">Counting the moments</p>
+          <h2 class="zoom-scroll">Until We Say, “Let the Celebration Begin!”</h2>
           <div class="timer" aria-label="Countdown to engagement ceremony">
             <div class="time-box"><strong id="days">00</strong><span>Days</span></div>
             <div class="time-separator">:</div>
@@ -287,11 +296,11 @@
 
       <section class="invitation section">
         <div class="section-decoration invitation-decoration" aria-hidden="true"><span class="decor-leaf decor-leaf-left">❧</span><span class="decor-leaf decor-leaf-right">❧</span><span class="decor-flower decor-flower-one">✿</span><span class="decor-flower decor-flower-two">✿</span></div>
-        <div class="invitation-inner reveal">
+        <div class="invitation-inner reveal" data-tilt>
           <div class="quote-mark">“</div>
-          <p>With the blessings of our families and loved ones,<br>
+          <p class="zoom-scroll">With the blessings of our families and loved ones,<br>
             we invite you to celebrate the beginning of our beautiful journey together.</p>
-          <div class="signature">Harsha &amp; Kowshika</div>
+          <div class="signature zoom-scroll">Harsha &amp; Kowshika</div>
           <div class="closing-ornament">✦ &nbsp; ❧ &nbsp; ✦</div>
         </div>
       </section>
