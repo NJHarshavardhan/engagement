@@ -96,12 +96,24 @@ body { top: 0 !important; }
   font-weight: 500;
 }
 
+.names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
 .names h1 {
   margin: 0;
+  max-width: min(88vw, 760px);
   font-family: "Great Vibes", cursive;
   font-size: clamp(60px, 8vw, 112px);
   line-height: .9;
   font-weight: 400;
+  letter-spacing: .02em;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   background: linear-gradient(115deg, var(--green-dark) 28%, #7da97d 42%, #e2a85c 50%, #7da97d 58%, var(--green-dark) 72%);
   background-size: 260% 100%;
   -webkit-background-clip: text;
@@ -860,7 +872,19 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
   .language-switcher { left: 14px; top: 14px; }
   .language-button { padding: 7px 9px; font-size: 8px; }
   .hero-content { padding: 85px 22px 65px; }
-  .names h1 { font-size: clamp(55px, 17vw, 78px); }
+  .names { gap: 3px; }
+  .names h1 {
+    max-width: 82vw;
+    font-size: clamp(40px, 14vw, 72px);
+    line-height: .94;
+    letter-spacing: 0;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .names .ampersand {
+    font-size: clamp(24px, 7vw, 38px);
+    margin: 4px 0 0;
+  }
   .hero-copy br { display: none; }
   .hero-date { flex-direction: column; gap: 8px; }
   .hero-date span { padding: 0; border-left: 0; }
