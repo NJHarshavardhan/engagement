@@ -23,7 +23,13 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Stops the elastic rubber-band bounce (iOS/Android) from fighting the
+     position:sticky engagement scene, which is what made scrolling feel
+     jumpy on phones. */
+  overscroll-behavior-y: none;
+}
 
 body {
   margin: 0;
@@ -32,6 +38,14 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   overflow-x: clip;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Smoother touch scrolling + no grey tap flash on interactive elements */
+@media (hover: none), (pointer: coarse) {
+  a, button { -webkit-tap-highlight-color: transparent; }
 }
 
 a { color: inherit; }
@@ -1095,6 +1109,16 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
 /* ---------- Text & badges (react to intro / meet / celebrate phases) ---------- */
 .scene-copy { position: absolute; z-index: 8; top: 15%; left: 50%; width: min(560px, 88vw); text-align: center; transform: translate(-50%, calc(-4px - var(--scene-meet) * 30px)); opacity: 1; transition: opacity .08s linear; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .scene-kicker { margin: 0; color: rgba(39,65,46,.96); text-transform: uppercase; letter-spacing: .24em; font-size: 10px; opacity: 1; font-weight: 600; }
+.scene-copy [data-scene-copy="title"] {
+  margin: 0;
+  font-size: clamp(24px, 2.8vw, 42px);
+  line-height: 1.1;
+  font-family: "Great Vibes", "Cormorant Garamond", serif;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: rgba(39,65,46,.96);
+  text-shadow: 0 4px 20px rgba(255,255,255,.5);
+}
 .scene-copy h2 { font-size: clamp(32px, 5vw, 54px); margin: 0; color: rgba(39,65,46,.96); text-shadow: 0 4px 20px rgba(255,255,255,.5); }
 .scene-copy p:last-child { margin: 0; color: rgba(58,86,65,.88); font-family: "Cormorant Garamond", serif; font-size: 21px; text-shadow: 0 2px 12px rgba(255,255,255,.38); }
 .scene-view-button {
@@ -1262,7 +1286,7 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
   .person-girl { left: 50%; width: clamp(130px, 27vw, 205px); --girl-travel: 14vw; }
   .person-boy { right: 50%; width: clamp(130px, 27vw, 205px); --boy-travel: 14vw; }
   .scene-copy { top: 14%; width: 88vw; }
-  .scene-badge { top: 52%; }
+  .scene-badge { top: 34%; }
   .scene-ring-button { bottom: 25%; }
   .scene-message { bottom: 13%; }
   .scene-corner-flowers { opacity: .5; }
@@ -1271,8 +1295,12 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
   .entrance-pillars { display: none; } .decor-pot { display: none; }
   .butterfly { font-size: 15px; }
   .kolam { font-size: 12px; letter-spacing: 8px; }
-  .welcome-sign { top: 34%; font-size: 6px; }
-  .name-board { top: 38%; font-size: 12px; }
+  /* These two duplicate the real <h2> title and the couple's names shown
+     elsewhere on the page — at phone/tablet sizes they just piled up as
+     illegible tiny text on top of the real heading, which is what made the
+     scene look cluttered. Hiding them leaves ONE clear heading instead of
+     three overlapping copies of the same words. */
+  .welcome-sign, .name-board { display: none; }
   .balloon-cluster { bottom: 42%; }
   .hanging-lantern { display: none; }
   .timer { gap: 8px; }
@@ -1283,22 +1311,37 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
 }
 
 @media (max-width: 560px) {
-  .engagement-scene { height: calc(var(--vh) * 120); min-height: 720px; }
-  .scene-sticky { min-height: 460px; }
+  /* Was `calc(var(--vh) * 120)`, which only gave ~20vh of actual scroll
+     travel (height minus the one-screen sticky viewport). That tiny travel
+     distance is why the couple appeared to snap/rush to the centre on a
+     normal scroll flick. Raising it gives the same choreography far more
+     scroll distance to play out over, so it now eases in gradually like it
+     does on desktop instead of jumping. */
+  .engagement-scene { height: calc(var(--vh) * 200); min-height: 1320px; }
+  .scene-sticky { min-height: 520px; }
   .thoranam { width: 145vw; top: -5px; transform: translateX(-50%) scale(.82); }
   .thoranam-cluster:nth-of-type(even) { display: block; }
-  .scene-copy { top: 11%; width: 90vw; }
-  .scene-copy h2 { font-size: clamp(24px, 7vw, 30px); }
-  .scene-copy p:last-child { margin-top: 0; font-size: 15px; }
-  .scene-badge { top: 48%; font-size: 7px; }
-  .person { bottom: 26%; }
-  .person-girl { left: 52%; width: clamp(118px, 34vw, 170px); --girl-travel: 12vw; }
-  .person-boy { right: 52%; width: clamp(118px, 34vw, 170px); --boy-travel: 12vw; }
-  .scene-ring-glow { bottom: 24%; width: 54px; height: 54px; }
-  .scene-ring-button { bottom: 20%; width: 56px; height: 56px; }
+
+  /* Tightened vertical rhythm below: on short phone viewports the old
+     percentages left large dead gaps between the heading, the pill badge,
+     the couple and the ring button. These values pull everything into one
+     connected column with even spacing instead of scattered islands. */
+  .scene-copy { top: 8%; width: 92vw; gap: 6px; }
+  .scene-kicker { font-size: 9px; letter-spacing: .2em; }
+  .scene-copy h2 { font-size: clamp(23px, 7vw, 29px); }
+  .scene-copy p:last-child { margin-top: 0; font-size: 14px; line-height: 1.4; }
+  /* Sits right under the paragraph now, reading as one clean intro block
+     (kicker → title → line → badge) instead of a separate floating chip
+     with empty space around it. */
+  .scene-badge { top: 30%; font-size: 7px; }
+  .person { bottom: 31%; }
+  .person-girl { left: 50%; width: clamp(122px, 30vw, 168px); --girl-travel: 13vw; }
+  .person-boy { right: 50%; width: clamp(122px, 30vw, 168px); --boy-travel: 13vw; }
+  .scene-ring-glow { bottom: 27%; width: 54px; height: 54px; }
+  .scene-ring-button { bottom: 23%; width: 56px; height: 56px; }
   .scene-ring-button::after { font-size: 7px; }
-  .scene-message { bottom: 12%; }
-  .scene-message strong { font-size: 35px; }
+  .scene-message { bottom: 15%; }
+  .scene-message strong { font-size: 32px; }
   .scene-progress { bottom: 14px; width: min(170px, 58vw); }
   .scene-corner-flowers { display: none; }
   .balloon-cluster { display: none; }
