@@ -1212,22 +1212,24 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
 
 .person-girl {
   --girl-travel: 18vw;
+  --girl-offset: -72%;
   left: 50%;
   width: clamp(140px, 17vw, 240px);
   opacity: var(--scene-intro);
   transform:
-    translate3d(calc(-72% - (1 - var(--scene-meet)) * var(--girl-travel, 18vw)), calc((1 - var(--scene-intro)) * 10px), 0)
+    translate3d(calc(var(--girl-offset) - (1 - var(--scene-meet)) * var(--girl-travel, 18vw)), calc((1 - var(--scene-intro)) * 10px), 0)
     scale(calc(.84 + var(--scene-meet) * .16));
   transform-origin: 50% 100%;
   transition: opacity .2s linear;
 }
 .person-boy {
   --boy-travel: 18vw;
+  --boy-offset: 72%;
   right: 50%;
   width: clamp(140px, 17vw, 240px);
   opacity: var(--scene-intro);
   transform:
-    translate3d(calc(72% + (1 - var(--scene-meet)) * var(--boy-travel, 18vw)), calc((1 - var(--scene-intro)) * 10px), 0)
+    translate3d(calc(var(--boy-offset) + (1 - var(--scene-meet)) * var(--boy-travel, 18vw)), calc((1 - var(--scene-intro)) * 10px), 0)
     scale(calc(.86 + var(--scene-meet) * .14));
   transform-origin: 50% 100%;
   transition: opacity .2s linear;
@@ -1358,9 +1360,9 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
      (kicker → title → line → badge) instead of a separate floating chip
      with empty space around it. */
   .scene-badge { top: 30%; font-size: 7px; }
-  .person { bottom: 31%; }
-  .person-girl { left: 50%; width: clamp(122px, 30vw, 168px); --girl-travel: 13vw; }
-  .person-boy { right: 50%; width: clamp(122px, 30vw, 168px); --boy-travel: 13vw; }
+  .person { bottom: 30%; }
+  .person-girl { left: 50%; width: clamp(190px, 50vw, 250px); --girl-travel: 10vw; --girl-offset: -76%; }
+  .person-boy { right: 50%; width: clamp(190px, 50vw, 250px); --boy-travel: 10vw; --boy-offset: 76%; }
   .scene-ring-glow { bottom: 27%; width: 54px; height: 54px; }
   .scene-ring-button { bottom: 23%; width: 56px; height: 56px; }
   .scene-ring-button::after { font-size: 7px; }
